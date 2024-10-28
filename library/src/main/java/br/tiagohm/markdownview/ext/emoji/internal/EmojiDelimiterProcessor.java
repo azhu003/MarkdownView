@@ -1,10 +1,29 @@
+/*
+ *
+ *  *    Copyright 2017 tiagohm
+ *  *
+ *  *    Licensed under the Apache License, Version 2.0 (the "License");
+ *  *    you may not use this file except in compliance with the License.
+ *  *    You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  *    Unless required by applicable law or agreed to in writing, software
+ *  *    distributed under the License is distributed on an "AS IS" BASIS,
+ *  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  *    See the License for the specific language governing permissions and
+ *  *    limitations under the License.
+ *
+ */
+
 package br.tiagohm.markdownview.ext.emoji.internal;
 
-import com.vladsch.flexmark.ast.Node;
-import com.vladsch.flexmark.internal.Delimiter;
 import com.vladsch.flexmark.parser.InlineParser;
+import com.vladsch.flexmark.parser.core.delimiter.Delimiter;
 import com.vladsch.flexmark.parser.delimiter.DelimiterProcessor;
 import com.vladsch.flexmark.parser.delimiter.DelimiterRun;
+import com.vladsch.flexmark.util.ast.Node;
+import com.vladsch.flexmark.util.misc.CharPredicate;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
 
 import br.tiagohm.markdownview.ext.emoji.Emoji;
@@ -59,7 +78,7 @@ public class EmojiDelimiterProcessor implements DelimiterProcessor {
     public void process(Delimiter opener, Delimiter closer, int delimitersUsed) {
         // Normal case, wrap nodes between delimiters in emoji node.
         // don't allow any spaces between delimiters
-        if (opener.getInput().subSequence(opener.getEndIndex(), closer.getStartIndex()).indexOfAny(BasedSequence.WHITESPACE_CHARS) == -1) {
+        if (opener.getInput().subSequence(opener.getEndIndex(), closer.getStartIndex()).indexOfAny(CharPredicate.anyOf(BasedSequence.WHITESPACE_CHARS)) == -1) {
             Emoji emoji = new Emoji(opener.getTailChars(delimitersUsed), BasedSequence.NULL, closer.getLeadChars(delimitersUsed));
             opener.moveNodesBetweenDelimitersTo(emoji, closer);
         } else {

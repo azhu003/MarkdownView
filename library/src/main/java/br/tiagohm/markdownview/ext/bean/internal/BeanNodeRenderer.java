@@ -1,13 +1,32 @@
+/*
+ *
+ *  *    Copyright 2017 tiagohm
+ *  *
+ *  *    Licensed under the Apache License, Version 2.0 (the "License");
+ *  *    you may not use this file except in compliance with the License.
+ *  *    You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  *    Unless required by applicable law or agreed to in writing, software
+ *  *    distributed under the License is distributed on an "AS IS" BASIS,
+ *  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  *    See the License for the specific language governing permissions and
+ *  *    limitations under the License.
+ *
+ */
+
 package br.tiagohm.markdownview.ext.bean.internal;
 
 import com.orhanobut.logger.Logger;
-import com.vladsch.flexmark.html.CustomNodeRenderer;
 import com.vladsch.flexmark.html.HtmlWriter;
 import com.vladsch.flexmark.html.renderer.NodeRenderer;
 import com.vladsch.flexmark.html.renderer.NodeRendererContext;
 import com.vladsch.flexmark.html.renderer.NodeRendererFactory;
 import com.vladsch.flexmark.html.renderer.NodeRenderingHandler;
-import com.vladsch.flexmark.util.options.DataHolder;
+import com.vladsch.flexmark.util.data.DataHolder;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -82,7 +101,7 @@ public class BeanNodeRenderer implements NodeRenderer {
     @Override
     public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
         HashSet<NodeRenderingHandler<?>> set = new HashSet<>();
-        set.add(new NodeRenderingHandler<>(Bean.class, new CustomNodeRenderer<Bean>() {
+        set.add(new NodeRenderingHandler<>(Bean.class, new NodeRenderingHandler.CustomNodeRenderer<Bean>() {
             @Override
             public void render(Bean node, NodeRendererContext context, HtmlWriter html) {
                 BeanNodeRenderer.this.render(node, context, html);
@@ -108,8 +127,9 @@ public class BeanNodeRenderer implements NodeRenderer {
     }
 
     public static class Factory implements NodeRendererFactory {
+
         @Override
-        public NodeRenderer create(final DataHolder options) {
+        public @NotNull NodeRenderer apply(@NotNull DataHolder options) {
             return new BeanNodeRenderer(options);
         }
     }

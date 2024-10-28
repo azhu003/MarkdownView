@@ -1,3 +1,20 @@
+/*
+ *
+ *  *    Copyright 2017 tiagohm
+ *  *
+ *  *    Licensed under the Apache License, Version 2.0 (the "License");
+ *  *    you may not use this file except in compliance with the License.
+ *  *    You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  *    Unless required by applicable law or agreed to in writing, software
+ *  *    distributed under the License is distributed on an "AS IS" BASIS,
+ *  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  *    See the License for the specific language governing permissions and
+ *  *    limitations under the License.
+ *
+ */
 package br.tiagohm.markdownview;
 
 import android.content.Context;
@@ -9,14 +26,11 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 import com.orhanobut.logger.Logger;
-import com.vladsch.flexmark.Extension;
 import com.vladsch.flexmark.ast.AutoLink;
 import com.vladsch.flexmark.ast.FencedCodeBlock;
 import com.vladsch.flexmark.ast.Heading;
 import com.vladsch.flexmark.ast.Image;
 import com.vladsch.flexmark.ast.Link;
-import com.vladsch.flexmark.ast.Node;
-import com.vladsch.flexmark.ast.util.TextCollectingVisitor;
 import com.vladsch.flexmark.ext.abbreviation.Abbreviation;
 import com.vladsch.flexmark.ext.abbreviation.AbbreviationExtension;
 import com.vladsch.flexmark.ext.attributes.AttributesExtension;
@@ -24,26 +38,29 @@ import com.vladsch.flexmark.ext.autolink.AutolinkExtension;
 import com.vladsch.flexmark.ext.footnotes.FootnoteExtension;
 import com.vladsch.flexmark.ext.gfm.strikethrough.StrikethroughSubscriptExtension;
 import com.vladsch.flexmark.ext.gfm.tasklist.TaskListExtension;
+import com.vladsch.flexmark.ext.superscript.SuperscriptExtension;
 import com.vladsch.flexmark.ext.tables.TablesExtension;
 import com.vladsch.flexmark.html.AttributeProvider;
-import com.vladsch.flexmark.html.CustomNodeRenderer;
 import com.vladsch.flexmark.html.HtmlRenderer;
-import com.vladsch.flexmark.html.HtmlWriter;
 import com.vladsch.flexmark.html.IndependentAttributeProviderFactory;
 import com.vladsch.flexmark.html.renderer.AttributablePart;
+import com.vladsch.flexmark.html.renderer.LinkResolverContext;
 import com.vladsch.flexmark.html.renderer.LinkType;
 import com.vladsch.flexmark.html.renderer.NodeRenderer;
-import com.vladsch.flexmark.html.renderer.NodeRendererContext;
 import com.vladsch.flexmark.html.renderer.NodeRendererFactory;
 import com.vladsch.flexmark.html.renderer.NodeRenderingHandler;
 import com.vladsch.flexmark.html.renderer.ResolvedLink;
 import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.superscript.SuperscriptExtension;
-import com.vladsch.flexmark.util.html.Attributes;
-import com.vladsch.flexmark.util.html.Escaping;
-import com.vladsch.flexmark.util.options.DataHolder;
-import com.vladsch.flexmark.util.options.MutableDataHolder;
-import com.vladsch.flexmark.util.options.MutableDataSet;
+import com.vladsch.flexmark.util.ast.Node;
+import com.vladsch.flexmark.util.ast.TextCollectingVisitor;
+import com.vladsch.flexmark.util.data.DataHolder;
+import com.vladsch.flexmark.util.data.MutableDataHolder;
+import com.vladsch.flexmark.util.data.MutableDataSet;
+import com.vladsch.flexmark.util.html.MutableAttributes;
+import com.vladsch.flexmark.util.misc.Extension;
+import com.vladsch.flexmark.util.sequence.Escaping;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -219,7 +236,7 @@ public class MarkdownView extends WebView {
                 .escapeHtml(mEscapeHtml)
                 .attributeProviderFactory(new IndependentAttributeProviderFactory() {
                     @Override
-                    public AttributeProvider create(NodeRendererContext context) {
+                    public @NotNull AttributeProvider apply(@NotNull LinkResolverContext context) {
                         return new CustomAttributeProvider();
                     }
                 })
@@ -285,49 +302,47 @@ public class MarkdownView extends WebView {
     }
 
     public static class NodeRendererFactoryImpl implements NodeRendererFactory {
+
         @Override
-        public NodeRenderer create(DataHolder options) {
+        public @NotNull NodeRenderer apply(@NotNull DataHolder options) {
             return new NodeRenderer() {
                 @Override
                 public Set<NodeRenderingHandler<?>> getNodeRenderingHandlers() {
                     HashSet<NodeRenderingHandler<?>> set = new HashSet<>();
-                    set.add(new NodeRenderingHandler<>(Image.class, new CustomNodeRenderer<Image>() {
-                        @Override
-                        public void render(Image node, NodeRendererContext context, HtmlWriter html) {
-                            if (!context.isDoNotRenderLinks()) {
-                                String altText = new TextCollectingVisitor().collectAndGetText(node);
+                    set.add(new NodeRenderingHandler<>(Image.class, (node, context, html) -> {
+                        if (!context.isDoNotRenderLinks()) {
+                            String altText = new TextCollectingVisitor().collectAndGetText(node);
 
-                                ResolvedLink resolvedLink = context.resolveLink(LinkType.IMAGE, node.getUrl().unescape(), null);
-                                String url = resolvedLink.getUrl();
+                            ResolvedLink resolvedLink = context.resolveLink(LinkType.IMAGE, node.getUrl().unescape(), null);
+                            String url = resolvedLink.getUrl();
 
-                                if (!node.getUrlContent().isEmpty()) {
-                                    // reverse URL encoding of =, &
-                                    String content = Escaping.percentEncodeUrl(node.getUrlContent()).replace("+", "%2B").replace("%3D", "=").replace("%26", "&amp;");
-                                    url += content;
-                                }
-
-                                final int index = url.indexOf('@');
-
-                                if (index >= 0) {
-                                    String[] dimensions = url.substring(index + 1, url.length()).split("\\|");
-                                    url = url.substring(0, index);
-
-                                    if (dimensions.length == 2) {
-                                        String width = TextUtils.isEmpty(dimensions[0]) ? "auto" : dimensions[0];
-                                        String height = TextUtils.isEmpty(dimensions[1]) ? "auto" : dimensions[1];
-                                        html.attr("style", "width: " + width + "; height: " + height);
-                                    }
-                                }
-
-                                html.attr("src", url);
-                                html.attr("alt", altText);
-
-                                if (node.getTitle().isNotNull()) {
-                                    html.attr("title", node.getTitle().unescape());
-                                }
-
-                                html.srcPos(node.getChars()).withAttr(resolvedLink).tagVoid("img");
+                            if (!node.getUrlContent().isEmpty()) {
+                                // reverse URL encoding of =, &
+                                String content = Escaping.percentEncodeUrl(node.getUrlContent()).replace("+", "%2B").replace("%3D", "=").replace("%26", "&amp;");
+                                url += content;
                             }
+
+                            final int index = url.indexOf('@');
+
+                            if (index >= 0) {
+                                String[] dimensions = url.substring(index + 1, url.length()).split("\\|");
+                                url = url.substring(0, index);
+
+                                if (dimensions.length == 2) {
+                                    String width = TextUtils.isEmpty(dimensions[0]) ? "auto" : dimensions[0];
+                                    String height = TextUtils.isEmpty(dimensions[1]) ? "auto" : dimensions[1];
+                                    html.attr("style", "width: " + width + "; height: " + height);
+                                }
+                            }
+
+                            html.attr("src", url);
+                            html.attr("alt", altText);
+
+                            if (node.getTitle().isNotNull()) {
+                                html.attr("title", node.getTitle().unescape());
+                            }
+
+                            html.srcPos(node.getChars()).withAttr(resolvedLink).tagVoid("img");
                         }
                     }));
                     return set;
@@ -337,8 +352,9 @@ public class MarkdownView extends WebView {
     }
 
     public class CustomAttributeProvider implements AttributeProvider {
+
         @Override
-        public void setAttributes(final Node node, final AttributablePart part, final Attributes attributes) {
+        public void setAttributes(@NotNull Node node, @NotNull AttributablePart part, @NotNull MutableAttributes attributes) {
             if (node instanceof FencedCodeBlock) {
                 if (part.getName().equals("NODE")) {
                     String language = ((FencedCodeBlock) node).getInfo().toString();

@@ -1,30 +1,34 @@
 /*
- *    Copyright 2017 tiagohm
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ *  *    Copyright 2017 tiagohm
+ *  *
+ *  *    Licensed under the Apache License, Version 2.0 (the "License");
+ *  *    you may not use this file except in compliance with the License.
+ *  *    You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  *    Unless required by applicable law or agreed to in writing, software
+ *  *    distributed under the License is distributed on an "AS IS" BASIS,
+ *  *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  *    See the License for the specific language governing permissions and
+ *  *    limitations under the License.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
  */
 
 package br.tiagohm.markdownview.ext.video.internal;
 
-import com.vladsch.flexmark.ast.Document;
 import com.vladsch.flexmark.ast.Link;
-import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.ast.Text;
 import com.vladsch.flexmark.parser.block.NodePostProcessor;
 import com.vladsch.flexmark.parser.block.NodePostProcessorFactory;
-import com.vladsch.flexmark.util.NodeTracker;
-import com.vladsch.flexmark.util.options.DataHolder;
+import com.vladsch.flexmark.util.ast.Document;
+import com.vladsch.flexmark.util.ast.Node;
+import com.vladsch.flexmark.util.ast.NodeTracker;
+import com.vladsch.flexmark.util.data.DataHolder;
 import com.vladsch.flexmark.util.sequence.BasedSequence;
+
+import org.jetbrains.annotations.NotNull;
 
 import br.tiagohm.markdownview.ext.video.VideoLink;
 
@@ -63,7 +67,7 @@ public class VideoLinkNodePostProcessor extends NodePostProcessor {
         }
 
         @Override
-        public NodePostProcessor create(Document document) {
+        public @NotNull NodePostProcessor apply(@NotNull Document document) {
             return new VideoLinkNodePostProcessor(document);
         }
     }
