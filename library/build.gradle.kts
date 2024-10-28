@@ -28,25 +28,41 @@ android {
     }
 }
 
+//noinspection UseTomlInstead
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-    implementation(libs.androidx.appcompat)
-    testImplementation(libs.junit)
+//    implementation(libs.androidx.appcompat)
+//    testImplementation(libs.junit)
 //    androidTestImplementation 'com.android.support.test:runner:1.0.1'
 //    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     //Flexmark
-    implementation(libs.flexmark)
-    implementation(libs.flexmark.ext.tables)
-    implementation(libs.flexmark.ext.gfm.strikethrough)
-    implementation(libs.flexmark.ext.gfm.tasklist)
-    implementation(libs.flexmark.ext.autolink)
-    implementation(libs.flexmark.ext.abbreviation)
-    implementation(libs.flexmark.ext.superscript)
-    implementation(libs.flexmark.ext.footnotes)
-    implementation(libs.flexmark.ext.attributes)
+//    implementation(libs.flexmark)
+//    implementation(libs.flexmark.ext.tables)
+//    implementation(libs.flexmark.ext.gfm.strikethrough)
+//    implementation(libs.flexmark.ext.gfm.tasklist)
+//    implementation(libs.flexmark.ext.autolink)
+//    implementation(libs.flexmark.ext.abbreviation)
+//    implementation(libs.flexmark.ext.superscript)
+//    implementation(libs.flexmark.ext.footnotes)
+//    implementation(libs.flexmark.ext.attributes)
+//    //Logger
+//    implementation(libs.logger)
+
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    testImplementation("junit:junit:4.13.2")
+    //Flexmark
+    implementation("com.vladsch.flexmark:flexmark:0.28.32")
+    implementation("com.vladsch.flexmark:ext.tables:0.28.32")
+    implementation("com.vladsch.flexmark:ext.strikethrough:0.28.32")
+    implementation("com.vladsch.flexmark:ext.gfm.tasklist:0.28.32")
+    implementation("com.vladsch.flexmark:ext.autolink:0.28.32")
+    implementation("com.vladsch.flexmark:ext.abbreviation:0.28.32")
+    implementation("com.vladsch.flexmark:ext.superscript:0.28.32")
+    implementation("com.vladsch.flexmark:ext.footnotes:0.28.32")
+    implementation("com.vladsch.flexmark:ext.attributes:0.28.32")
     //Logger
-    implementation(libs.logger)
+    implementation("com.orhanobut:logger:1.15")
 }
 
 configurations.all {
