@@ -32,24 +32,6 @@ android {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-//    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-//    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-
-//    implementation(libs.androidx.appcompat)
-//    testImplementation(libs.junit)
-//    //Flexmark
-//    implementation(libs.flexmark)
-//    implementation(libs.flexmark.ext.tables)
-//    implementation(libs.flexmark.ext.gfm.strikethrough)
-//    implementation(libs.flexmark.ext.gfm.tasklist)
-//    implementation(libs.flexmark.ext.autolink)
-//    implementation(libs.flexmark.ext.abbreviation)
-//    implementation(libs.flexmark.ext.superscript)
-//    implementation(libs.flexmark.ext.footnotes)
-//    implementation(libs.flexmark.ext.attributes)
-//    //Logger
-//    implementation(libs.logger)
-
     implementation("androidx.appcompat:appcompat:1.7.0")
     testImplementation("junit:junit:4.13.2")
     //Flexmark
