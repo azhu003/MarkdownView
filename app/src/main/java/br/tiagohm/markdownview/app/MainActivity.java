@@ -1,9 +1,10 @@
 package br.tiagohm.markdownview.app;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import br.tiagohm.markdownview.MarkdownView;
 import br.tiagohm.markdownview.css.InternalStyleSheet;
@@ -22,11 +23,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.change_theme_action:
-                break;
-        }
+        if (item.getItemId() == R.id.change_theme_action) {
 
+        }
         return true;
     }
 
