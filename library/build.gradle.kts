@@ -53,14 +53,14 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     //Flexmark
     implementation("com.vladsch.flexmark:flexmark:0.28.32")
-    implementation("com.vladsch.flexmark:ext.tables:0.28.32")
-    implementation("com.vladsch.flexmark:ext.strikethrough:0.28.32")
-    implementation("com.vladsch.flexmark:ext.gfm.tasklist:0.28.32")
-    implementation("com.vladsch.flexmark:ext.autolink:0.28.32")
-    implementation("com.vladsch.flexmark:ext.abbreviation:0.28.32")
-    implementation("com.vladsch.flexmark:ext.superscript:0.28.32")
-    implementation("com.vladsch.flexmark:ext.footnotes:0.28.32")
-    implementation("com.vladsch.flexmark:ext.attributes:0.28.32")
+    implementation("com.vladsch.flexmark:flexmark-ext-tables:0.28.32")
+    implementation("com.vladsch.flexmark:flexmark-ext-gfm-strikethrough:0.28.32")
+    implementation("com.vladsch.flexmark:flexmark-ext-gfm-tasklist:0.28.32")
+    implementation("com.vladsch.flexmark:flexmark-ext-autolink:0.28.32")
+    implementation("com.vladsch.flexmark:flexmark-ext-abbreviation:0.28.32")
+    implementation("com.vladsch.flexmark:flexmark-ext-superscript:0.28.32")
+    implementation("com.vladsch.flexmark:flexmark-ext-footnotes:0.28.32")
+    implementation("com.vladsch.flexmark:flexmark-ext-attributes:0.28.32")
     //Logger
     implementation("com.orhanobut:logger:1.15")
 }
