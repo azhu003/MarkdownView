@@ -49,6 +49,8 @@ Images are almost identical to links, but an image starts with an exclamation po
 
 ![](https://www.google.com.br/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png@100%|100px)
 ![](https://www.google.com.br/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png@100px|auto)
+![](https://i-blog.csdnimg.cn/direct/5239ae895cf54b51b73b0f9b46d5e025.png#pic_center)
+![](https://i-blog.csdnimg.cn/direct/7bc4d9d75c4543f19d211beacdafb7b8.png#pic_center)
 
 # Code
 To create inline code, wrap with backticks `.

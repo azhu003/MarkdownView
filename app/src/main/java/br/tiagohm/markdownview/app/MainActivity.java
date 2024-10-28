@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         //Cria o bean.
         MyBean myBean = new MyBean();
         myBean.setHello("Olá");
-        myBean.setDiasDaSemana(MyBean.DiasDaSemana.DOMINGO);
+        myBean.setDiasDaSemana(MyBean.DiasDaSemana.QUINTA);
 
         mMarkdownView = findViewById(R.id.mark_view);
         mMarkdownView.addStyleSheet(mStyle);
